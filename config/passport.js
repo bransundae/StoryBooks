@@ -46,11 +46,46 @@ module.exports = function(passport) {
             clientID: keys.googleClientID,
             clientSecret: keys.googleClientSecret,
             callbackURL: '/auth/google/callback',
-            passReqToCallback: true,
             proxy: true
         }, (accessToken, refreshToken, profile, done) => {
-            console.log(accessToken);
-            console.log(profile);
+            const image = profile.photos[0].value.substring(0, profile.photos[0].value.indexOf('?'));
+            const randomPassword = Math.random().toString(36).slice(-8);
+
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(randomPassword, salt, (err, hash) => {
+                    if (err) throw err;
+                    const newUser = {
+                        googleID: profile.id,
+                        firstName: profile.name.givenName,
+                        lastName: profile.name.familyName,
+                        password: hash,
+                        email: profile.emails[0].value,
+                        image: image
+                    }
+                    User.findOne({
+                        googleID: profile.id
+                    })
+                    .then(user => {
+                        if (!user)
+                            new User(newUser)
+                            .save()
+                            .then(user => done(null, user));
+                        else
+                            return done(null, user);
+                    })
+                    .catch(err => {return ;});
+                });
+            });
         })
     )
+
+    passport.serializeUser((user, done) => {
+        done(null, user.id, {message: 'Logged in'});
+    });
+
+    passport.deserializeUser((id, done) => {
+        User.findById(id, (err, user) => {
+            done(err, user);
+        });
+    });
 }
