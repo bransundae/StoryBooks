@@ -6,6 +6,7 @@ const keys = require('./config/keys');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const exphbs = require('express-handlebars');
+const path = require('path');
 
 const app = express();
 
@@ -14,6 +15,7 @@ const app = express();
 const index = require('./routes/index');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+const stories = require('./routes/stories');
 
 //Load Middleware
 
@@ -46,6 +48,9 @@ const auth = require('./routes/auth');
         next();
     });
 
+    //Static Folder
+    app.use(express.static(path.join(__dirname, 'public')));
+
     //Handlebars
     app.engine('handlebars', exphbs({
         defaultLayout: 'main'
@@ -56,6 +61,7 @@ const auth = require('./routes/auth');
 app.use('/', index);
 app.use('/users', users);
 app.use('/auth', auth);
+app.use('/stories', stories);
 
 //Port and Server
 

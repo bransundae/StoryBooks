@@ -6,13 +6,14 @@
                 <i class="fa fa-bars"></i>
             </a>
             <!-- RIGHT NAV -->
-            <ul class="right hide-on-small-only">
+            <ul class="right">
                 {{#if user}}
                     <li>
-                        <a href="/dashboard">Welcome {{user.firstName}}</a>
+                        <a class="hide-on-med-and-down" href="/dashboard">Welcome {{user.firstName}}</a>
                     </li>
+
                     <li>
-                        <a href="/auth/logout"><i class="fas fa-sign-out-alt"> Logout</i></a>
+                        <a class="hide-on-small-only" href="/auth/logout"><i class="fas fa-sign-out-alt"> Logout</i></a>
                     </li>
                 {{else}}
                     <li>
@@ -21,7 +22,7 @@
                 {{/if}}
             </ul>
             <!-- SIDE MENU -->
-            <ul class="sidenav" id="main-menu">
+            <ul class="side-nav" id="main-menu">
                     {{#unless user}}
                         <li>
                             <a class="red darken-1 btn" href="/auth/google"><i class="fab fa-google left"></i> Login With Google</a>
