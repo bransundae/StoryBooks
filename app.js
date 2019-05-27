@@ -7,7 +7,7 @@ const app = express();
 //Routes
 
 app.get('/', (req, res) => {
-    
+    res.send('Awe');
 });
 
 const port = process.env.PORT || 5000;
