@@ -7,6 +7,8 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const exphbs = require('express-handlebars');
 const path = require('path');
+const bodyParser = require('body-parser');
+const {truncate, stripTags} = require('./helpers/hbs');
 
 const app = express();
 
@@ -53,9 +55,16 @@ const stories = require('./routes/stories');
 
     //Handlebars
     app.engine('handlebars', exphbs({
+        helpers: {
+            truncate: truncate,
+            stripTags: stripTags
+        },
         defaultLayout: 'main'
     }));
     app.set('view engine', 'handlebars');
+
+    //Body-Parser
+    app.use(bodyParser.urlencoded({extended: false}));
 
 //Enable Routes
 app.use('/', index);

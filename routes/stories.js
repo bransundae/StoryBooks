@@ -1,10 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const {ensureAuthenticated, ensureGuest} = require('../helpers/auth');
+const mongoose = require('mongoose');
+
+//Load Story Model
+require('../models/Story');
+const Story = mongoose.model('stories');
 
 //Stories Index
 router.get('/', (req, res) => {
-    res.render('stories/index');
+    Story.find({status:'public'})
+    .then(stories => {
+        res.render('stories/index', {
+            stories: stories
+        });
+    })
 });
 
 //Stories Add
@@ -19,7 +29,37 @@ router.get('/edit',ensureAuthenticated, (req, res) => {
 
 //Stories Show
 router.get('/show', (req, res) => {
-    res.render('stories/show');
+    Story.find({user:req.user.id})
+    .then(stories => {
+        res.render('stories/show', {
+            stories: stories
+        });
+    })
+});
+
+//Process Add Stories
+router.post('/', (req, res) => {
+    let allowComments;
+
+    if (req.body.allowComments)
+        allowComments = true;
+    else
+        allowComments = false;
+
+    const newStory = {
+        title: req.body.title,
+        body: req.body.body,
+        status: req.body.status,
+        allowComments: allowComments,
+        user: req.user.id
+    }
+
+    new Story(newStory)
+    .save()
+    .then(story => {
+        console.log(story);
+        res.redirect('/stories/show/')
+    });
 });
 
 module.exports = router;

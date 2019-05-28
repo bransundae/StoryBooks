@@ -5,7 +5,8 @@ const bcrypt = require('bcryptjs');
 const keys = require('./keys');
 
 //Load User Model
-const User = mongoose.model('users');
+require('../models/User');
+const User = mongoose.model('users');;
 
 //Local Strategy
 module.exports = function(passport) {
@@ -48,7 +49,7 @@ module.exports = function(passport) {
             callbackURL: '/auth/google/callback',
             proxy: true
         }, (accessToken, refreshToken, profile, done) => {
-            const image = profile.photos[0].value.substring(0, profile.photos[0].value.indexOf('?'));
+            const image = profile.photos[0].value;
             const randomPassword = Math.random().toString(36).slice(-8);
 
             bcrypt.genSalt(10, (err, salt) => {
