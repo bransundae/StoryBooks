@@ -10,7 +10,6 @@ module.exports = {
         return str;
     },
     stripTags: (input) => {
-        //return input.replace(/<(?:.|\n)*?>/gm, '');
-        return input.replace(/[^\w\s]/gi, ' ');
+        return input.replace(/<(?:.|\n)*?>/gm, '');
     }
 }

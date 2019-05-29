@@ -10,6 +10,7 @@ const Story = mongoose.model('stories');
 //Stories Index
 router.get('/', (req, res) => {
     Story.find({status:'public'})
+    .populate('user')
     .then(stories => {
         res.render('stories/index', {
             stories: stories
@@ -30,6 +31,7 @@ router.get('/edit',ensureAuthenticated, (req, res) => {
 //Stories Show
 router.get('/show', (req, res) => {
     Story.find({user:req.user.id})
+    .populate('users')
     .then(stories => {
         res.render('stories/show', {
             stories: stories
@@ -57,8 +59,7 @@ router.post('/', (req, res) => {
     new Story(newStory)
     .save()
     .then(story => {
-        console.log(story);
-        res.redirect('/stories/show/')
+        res.redirect(`/stories/show/${stories.id}`)
     });
 });
 
