@@ -58,9 +58,9 @@
         form.onsubmit = function() {
             // Populate hidden form on submit
             var body = document.querySelector('input[name=body]');
-            body.value = quill.container.innerHTML;
+            body.value = JSON.stringify(quill.getText());
 
-            document.querySelector('#story-add-form').submit()
+            document.querySelector('#story-add-form').submit();
 
             return false;
         };

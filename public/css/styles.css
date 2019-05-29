@@ -15,3 +15,12 @@ main {
 footer {
     margin-top: 20px;
 }
+
+.truncate-content {
+    height: 30vh;
+}
+
+
+div.truncate-content * {
+    overflow: hidden;
+}
